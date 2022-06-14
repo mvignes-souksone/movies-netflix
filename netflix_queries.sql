@@ -4,6 +4,20 @@ create table moviedata as (select T1.id, T1.type, T1.title, cast(T1.release_year
 
 create table titlesf as (select *, cast(release_year as char(4)) as release_yearf from titles);
 
+alter table moviedata 
+	alter production_countries type text[] using string_to_array(production_countries, ',');
+
+
+update moviedata set production_countries = replace(production_countries,']','') ;
+
+update moviedata set production_countries = replace(production_countries,'[','') ;
+
+create table moviedatafinal as (select t.id, t.type, t.title, t.release_year, t.imdb_score, u.production_countries, t.person_id, t.name, t.role 
+from moviedata t cross join
+     unnest(t.production_countries) u(production_countries));
+
+update moviedatafinal SET production_countries = replace(production_countries, '''', '');
+
 
 select count(distinct T1.title) from titles T1 left join credits T2 on  T1.id = T2.id where T2.id is null;
 
