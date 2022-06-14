@@ -16,6 +16,8 @@ create table moviedatafinal as (select t.id, t.type, t.title, t.release_year, t.
 from moviedata t cross join
      unnest(t.production_countries) u(production_countries));
 
+update moviedatafinal SET production_countries = trim(production_countries)
+
 update moviedatafinal SET production_countries = replace(production_countries, '''', '');
 
 
