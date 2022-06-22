@@ -25,3 +25,13 @@ select count(distinct T1.title) from titles T1 left join credits T2 on  T1.id = 
 
 select count(distinct T1.person_id) from credits T1 left join titles T2 on  T1.id = T2.id where T2.id is null;
 
+update titlesf set genres = replace(genres,']','') ;
+
+update titlesf set genres = replace(genres,'[','') ;
+
+alter table titlesf 
+	alter genres type text[] using string_to_array(genres, ',');
+
+create table titlesfinal as (select t.id, t.type, t.title, t.release_year, t.imdb_score, u.genres
+from titlesf t cross join
+     unnest(t.genres) u(genres));
