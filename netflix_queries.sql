@@ -35,3 +35,8 @@ alter table titlesf
 create table titlesfinal as (select t.id, t.type, t.title, t.release_year, t.imdb_score, u.genres
 from titlesf t cross join
      unnest(t.genres) u(genres));
+
+update titlesfinal SET genres = trim(genres);
+
+update titlesfinal SET genres = replace(genres, '''', '');
+
